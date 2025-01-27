@@ -26,10 +26,12 @@ temp = args.temp
 beta = 1 / temp
     
 # Prepare file path
-dir_path = f"generated_data/{N}_{J}/{temp}/"
+dir_path = f"generated_data/{n_images}_{N}_{J}/"
 
 # Create directories if they don't exist
 os.makedirs(dir_path, exist_ok=True)
+
+store = []
 
 # Main loop
 for i in trange(n_images):
@@ -38,13 +40,29 @@ for i in trange(n_images):
     lattice[np.random.rand(N, N) < 0.25] = -1
 
     energies, magnetization, lattice = metropolis(lattice, times, beta, J, seed, sequential=False)
-    np.save(
-        f"{dir_path}{i}.npy",
-        {
-            'energies': energies,
-            'magnetization': magnetization,
-            'lattice': lattice
-        }
-    )
+    
+    # typecast lattice to boolean, -1 s to 0 and 1s to 1s
+    lattice[lattice == -1] = 0
+    lattice = lattice.astype(bool)
+    
+    # np.save(
+    #     f"{dir_path}{i}.npy",
+    #     {
+    #         # 'energies': energies,
+    #         # 'magnetization': magnetization,
+    #         'lattice': lattice
+    #     }
+    # )
+    
+    store.append(lattice)
 
     seed += 1
+
+np.save(
+    f"{dir_path}{temp}.npy", np.array(store)
+    # {
+    #     # 'energies': energies,
+    #     # 'magnetization': magnetization,
+    #     'lattice': np.array(lattice)
+    # }
+)
