@@ -49,7 +49,7 @@ def get_energy(lattice, J = -1):
 
 
 
-def metropolis(lattice, times, B, J, seed, sequential=True):
+def metropolis(lattice, times, B, J, seed, sequential=False):
     if sequential and times > 1e5:
         raise ValueError("times is too large for sequential")
     
@@ -80,6 +80,34 @@ def metropolis(lattice, times, B, J, seed, sequential=True):
     magnetization = np.ctypeslib.as_array(result_ptr[1], shape=(times,))
     lattice = np.ctypeslib.as_array(lattice_ptr, shape=(N*N,)).reshape((N, N))
     return energies, magnetization, lattice
+
+
+
+def metropolis_lowmem(lattice, times, B, J, seed):
+    N = len(lattice)
+
+    lattice = lattice.astype(np.int32).ravel()
+    lattice_ptr = lattice.ctypes.data_as(ctypes.POINTER(ctypes.c_int))
+
+    net_energy = metropolis_lib.get_energy(lattice_ptr, N, J)
+    net_spins = np.sum(lattice)
+    
+    metropolis_func = metropolis_lib.metropolis_lowmem
+
+    # Call the C function
+    metropolis_func(
+        lattice_ptr,
+        ctypes.c_int(N),
+        ctypes.c_int(times),
+        ctypes.c_double(B),
+        ctypes.c_int(J),
+        ctypes.c_int(seed),
+        ctypes.c_int(net_energy),
+        ctypes.c_int(net_spins)
+    )
+
+    lattice = np.ctypeslib.as_array(lattice_ptr, shape=(N*N,)).reshape((N, N))
+    return lattice
 
 
 def abs(lattice, times, Bs, J, seed, sequential=True):

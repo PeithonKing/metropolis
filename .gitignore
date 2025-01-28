@@ -4,3 +4,6 @@ port_to_python
 __pycache__
 .ipynb_checkpoints
 generated_data
+errors
+outputs
+metropolis.so
