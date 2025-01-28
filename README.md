@@ -1,6 +1,6 @@
 # Metropolis Algorithm Implementation
 
-This repository provides an implementation of the **Metropolis algorithm** in **C**, with a Python wrapper to interface with the C code. The algorithm is typically used for simulating systems in statistical mechanics and is applied here for a simple lattice-based model (e.g., Ising model).
+This repository provides an implementation of the **Metropolis algorithm** in **C**, with a Python wrapper to interface with the C code.
 
 ## Installation
 

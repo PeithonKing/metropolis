@@ -6,7 +6,7 @@ ERROR_DIR="/home/aritra/projects/metropolis/errors"
 mkdir -p "$OUTPUT_DIR" "$ERROR_DIR"
 
 # Loop through temperatures
-for temp in $(seq 2.0 0.1 2.5); do
+for temp in $(seq 2.0 0.1 7.0); do
   qsub <<< "#!/bin/bash
 #PBS -N metropolis_job_${temp}
 #PBS -l nodes=1:ppn=1
