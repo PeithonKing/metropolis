@@ -3,8 +3,8 @@ use_rust
 port_to_python
 __pycache__
 .ipynb_checkpoints
-generated_data
+final_data
 errors
 outputs
-metropolis.so
+*.so
 *.ipynb
